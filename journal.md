@@ -2,7 +2,7 @@
 
 <p align="center"> ────────୨ৎ──────── </p>
 
-### Partie 1:
+### Partie 1 (1-2):
 #### 1. Lorsque vous cliquez sur le bouton vert pour lancer l'application, quelles sont les étapes ducycle de vie de l’application (ALM) exécutées par votre IDE ?
 
 Les étapes exécuté par mon IDE sont :
@@ -114,3 +114,45 @@ Cette annotation va générer un construteur avec les champs final ou @NonNull, 
 ![img_2.png](img_2.png)
 
 <p align="center"> ────────୨ৎ──────── </p>
+
+### Partie 2 (3-4):
+#### 3.1.2. Configuration de la source de données
+##### 3.1.3. pom.xml
+#### Selon vous, que se passe-t-il lorsqu'on active cette dépendance ?
+
+Spring Boot active JPA et Hibernate automatiquement, ce qui permet :
+ - de mapper tes classes @Entity avec les tables de ta base,
+ - d’exécuter des requêtes sans écrire de SQL grâce aux JpaRepository,
+ - de créer ou mettre à jour les tables automatiquement,
+ - de gérer les transactions pour nous.
+
+**JDBC** (Java Database Connectivity), c’est l’API de base de Java pour communiquer avec une base de données.
+
+**Data source** configuration de la connexion à la base de données.
+Elle contient :
+ - l’URL JDBC (jdbc:mariadb://localhost:3306/Base_ALTN72),
+ - le nom d’utilisateur et le mot de passe,
+ - le driver JDBC (fichier )
+ - 
+#### 3.2. CODE DE LA COUCHE "M"
+
+**Entity** est une classe java mappée à une base de donnée. Les instances correspondes aux lignes et les attributs à chaque colonne.
+
+#### 4. Stack "C" : évolution
+   #### 4.1. Affichage des Programmeurs
+   4.1.1. Comment pouvons-nous appeler la méthode de ProgrammeurRepository qui nous
+   permettra de récupérer les infos sur les programmeurs ?`
+On appelle la méthode en utilisant l'instance du repository.
+   4.1.2. Pouvons-nous le faire directement dans la classe ProgrammeurControleur ?
+Parce que ça viole la séparation des responsabilités, le controleur ne doit pas contenir de logiques métier.
+
+#### 4.1.4. Quel est, selon vous, l'intérêt d'utiliser l'annotation @Service ?
+L'annotation @Service permet de définir les composants de la couche service d'une application. Elle identifie une classe comme un service de logique métier , permettant à Spring de la gérer comme un Spring Bean . Cette annotation permet de séparer la logique métier de la couche contrôleur, améliorant ainsi la maintenabilité et la modularité du code.
+
+4.1.7. Où en sommes-nous par rapport au diagramme d'architecture multi stack ?
+On est a 3 couches sur 4 : il manque que la vue avec thymleaf
+#### 4.4. Modification d'un programmeur (PUT ou PATCH)
+Créez une méthode qui permet de modifier un programmeur à partir de son id. Quelle est la
+différence entre PUT et PATCH ?
+
+La différence est que Put écrase toutes les données au moment de la modification alors que Patch modifie uniquement les infos données dans la requete.

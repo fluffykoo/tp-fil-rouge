@@ -1,25 +1,60 @@
 package com.altn72.tpfilrouge.controleur;
 
 import com.altn72.tpfilrouge.modele.Programmeur;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/tpfilrouge")
 public class ProgrammeurControleur {
-//    @GetMapping("/hello")
-//    public List<String>  afficherHello() {
-//        List <String> liste = new ArrayList<>();// ou juste =List<String> liste = new ArrayList<>(Arrays.asList("Hello", "LSI", "I2/2025_26"));
-//        liste.add("Hello");
-//        liste.add("LSI");
-//        liste.add("I2/2025_26");
-//        System.out.println(liste);
+    @Autowired
+    private final ProgrammeurService programmeurService;
+
+    public ProgrammeurControleur(ProgrammeurService programmeurService) {
+        this.programmeurService = programmeurService;
+    }
+
+    @GetMapping("/programmeurs")
+    public List<Programmeur> afficherInfosProgrammers() {
+        return programmeurService.afficherInfosProgrammeurs();
+    }
+
+
+    @GetMapping("/programmeur/{idProgrammeur}")
+    public Optional<Programmeur> afficherUnProgrammeur(@PathVariable Integer idProgrammeur) {
+
+        return programmeurService.getUnProgrammeur(idProgrammeur);
+    }
+
+    @DeleteMapping("/programmeur/supprimer/{idProgrammeur}")
+    public Optional<Programmeur> deleteUnProgrammeur(@PathVariable Integer idProgrammeur) {
+        return programmeurService.deleteUnProgrammeur(idProgrammeur);
+    }
+//    @PutMapping("/programmeur/modifier/{udProgrammeur}")
+//    public Programmeur putProgrammeur(@PathVariable Integer idProgrammeur, @RequestBody Programmeur programmeurModifie) {
+//        return programmeurService.putProgrammeur(idProgrammeur, programmeurModifie);
 //
-//        System.out.println(programmeur);
-//        return liste;
-//   }
+    @PutMapping("/programmeur/modifierPut/{idProgrammeur}")
+    public Optional<Programmeur> putUnProgrammeur(@PathVariable Integer idProgrammeur, @RequestBody Programmeur programmeurModifie) {
+        return programmeurService.putUnProgrammeur(idProgrammeur, programmeurModifie);
+    }
+
+    @PatchMapping("/programmeur/modifierPatch/{idProgrammeur}")
+    public Optional<Programmeur> patchUnProgrammeur(@PathVariable Integer idProgrammeur, @RequestBody Programmeur programmeurModifie) {
+        return programmeurService.patchUnProgrammeur(idProgrammeur, programmeurModifie);
+    }
+
+    @PostMapping("/programmeurs")
+    public Programmeur postUnProgrammeur(@RequestBody Programmeur nouveauProgrammeur) {
+        return programmeurService.postUnProgrammeur(nouveauProgrammeur);
+    }
+}
+
+//version tp partie 1-2
+ /*
 @GetMapping("/programmeurs")
 public List<Programmeur> afficherInfosProgrammeurs() {
     List<Programmeur> programmeurs = new ArrayList<>();
@@ -33,3 +68,4 @@ public List<Programmeur> afficherInfosProgrammeurs() {
         return programmeurs;// affichage sur la page web
    }
 }
+*/
