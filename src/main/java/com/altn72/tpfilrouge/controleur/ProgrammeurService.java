@@ -2,8 +2,10 @@ package com.altn72.tpfilrouge.controleur;
 
 import com.altn72.tpfilrouge.modele.Programmeur;
 import com.altn72.tpfilrouge.modele.ProgrammeurRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,22 +44,35 @@ public class ProgrammeurService {
     }
 
     //modifie les infos d'un programmeur avec PUT
-    public Optional<Programmeur> putUnProgrammeur(Integer idProgrammeur, Programmeur programmeurModifie) {
-        Optional<Programmeur> programmeur = programmeurRepository.findById(idProgrammeur);
+//    public Optional<Programmeur> putUnProgrammeur(Integer idProgrammeur, Programmeur programmeurModifie) {
+//        Optional<Programmeur> programmeur = programmeurRepository.findById(idProgrammeur);
+//
+//        if (programmeur.isPresent()) {
+//            Programmeur p = programmeur.get();
+//            p.setNom(programmeurModifie.getNom());
+//            p.setPrenom(programmeurModifie.getPrenom());
+//            p.setAdresse(programmeurModifie.getAdresse());
+//            p.setLangage(programmeurModifie.getLangage());
+//            p.setLivre(programmeurModifie.getLivre());
+//            p.setSalaire(programmeurModifie.getSalaire());
+//
+//            programmeurRepository.save(p);
+//            return Optional.of(p);
+//        }
+//            throw new IllegalStateException(" Ce programmeur n'existe pas");
+//    }
+    @Transactional
+    public void modifierProgrammeur(Integer idProgrammeur, Programmeur programmeurModifie) {
+        Programmeur programmeurToModify = programmeurRepository.findById(idProgrammeur)
+                .orElseThrow(); //Récupère le programmeur ou lance une exception s’il n’existe pas
 
-        if (programmeur.isPresent()) {
-            Programmeur p = programmeur.get();
-            p.setNom(programmeurModifie.getNom());
-            p.setPrenom(programmeurModifie.getPrenom());
-            p.setAdresse(programmeurModifie.getAdresse());
-            p.setLangage(programmeurModifie.getLangage());
-            p.setLivre(programmeurModifie.getLivre());
-            p.setSalaire(programmeurModifie.getSalaire());
+        if (programmeurToModify != null) { //Sécurité supplémentaire (même si orElseThrow garantit qu’il existe)
+            BeanUtils.copyProperties(programmeurModifie, programmeurToModify, "id");
+            //Copie toutes les propriétés du programmeurModifie vers celui existant sauf l’ID pour ne pas écraser la clé primaire
 
-            programmeurRepository.save(p);
-            return Optional.of(p);
+            programmeurRepository.save(programmeurToModify);
+            //Persiste les changements dans la base
         }
-            throw new IllegalStateException(" Ce programmeur n'existe pas");
     }
 //    public Programmeur putProgrammeur(Integer idProgrammeur, Programmeur programmeurModifie) {
 //        Programmeur programmeur = programmeurRepository.findById(idProgrammeur).orElseThrow(() -> new IllegalStateException("Ce programmeur n'existe pas"));

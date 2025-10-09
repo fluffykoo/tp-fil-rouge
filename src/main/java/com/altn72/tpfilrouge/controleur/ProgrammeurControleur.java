@@ -2,12 +2,16 @@ package com.altn72.tpfilrouge.controleur;
 
 import com.altn72.tpfilrouge.modele.Programmeur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+//@RestController
+@Controller
 @RequestMapping("/tpfilrouge")
 public class ProgrammeurControleur {
     @Autowired
@@ -18,28 +22,30 @@ public class ProgrammeurControleur {
     }
 
     @GetMapping("/programmeurs")
-    public List<Programmeur> afficherInfosProgrammers() {
-        return programmeurService.afficherInfosProgrammeurs();
+    public String afficherInfosProgrammers(Model model) {
+        List<Programmeur> listeProgrammeurs = programmeurService.afficherInfosProgrammeurs();
+        model.addAttribute("lesProgrammeurs", listeProgrammeurs);
+        model.addAttribute("programmeur", new Programmeur());
+        return "listeProgrammeurs";
     }
-
-
     @GetMapping("/programmeur/{idProgrammeur}")
     public Optional<Programmeur> afficherUnProgrammeur(@PathVariable Integer idProgrammeur) {
 
         return programmeurService.getUnProgrammeur(idProgrammeur);
     }
 
+
     @DeleteMapping("/programmeur/supprimer/{idProgrammeur}")
-    public Optional<Programmeur> deleteUnProgrammeur(@PathVariable Integer idProgrammeur) {
-        return programmeurService.deleteUnProgrammeur(idProgrammeur);
+    public String deleteUnProgrammeur(@PathVariable Integer idProgrammeur) {
+        programmeurService.deleteUnProgrammeur(idProgrammeur);
+        return "redirect:/tpfilrouge/programmeurs";
     }
-//    @PutMapping("/programmeur/modifier/{udProgrammeur}")
-//    public Programmeur putProgrammeur(@PathVariable Integer idProgrammeur, @RequestBody Programmeur programmeurModifie) {
-//        return programmeurService.putProgrammeur(idProgrammeur, programmeurModifie);
-//
-    @PutMapping("/programmeur/modifierPut/{idProgrammeur}")
-    public Optional<Programmeur> putUnProgrammeur(@PathVariable Integer idProgrammeur, @RequestBody Programmeur programmeurModifie) {
-        return programmeurService.putUnProgrammeur(idProgrammeur, programmeurModifie);
+
+    @PutMapping("/programmeur/modifier/{idProgrammeur}")
+    public ResponseEntity<Void> modifierProgrammeur(@PathVariable Integer idProgrammeur, @RequestBody Programmeur programmeurModifie) {
+
+        programmeurService.modifierProgrammeur(idProgrammeur, programmeurModifie);
+        return ResponseEntity.noContent().build(); // 204 No Content : ressource modifiée avec succès
     }
 
     @PatchMapping("/programmeur/modifierPatch/{idProgrammeur}")
@@ -47,10 +53,12 @@ public class ProgrammeurControleur {
         return programmeurService.patchUnProgrammeur(idProgrammeur, programmeurModifie);
     }
 
-    @PostMapping("/programmeurs")
-    public Programmeur postUnProgrammeur(@RequestBody Programmeur nouveauProgrammeur) {
-        return programmeurService.postUnProgrammeur(nouveauProgrammeur);
-    }
+
+@PostMapping("/programmeurs")
+public String postUnProgrammeur(@ModelAttribute Programmeur nouveauProgrammeur) {
+    programmeurService.postUnProgrammeur(nouveauProgrammeur);
+    return "redirect:/tpfilrouge/programmeurs";
+}
 }
 
 //version tp partie 1-2

@@ -139,20 +139,30 @@ Elle contient :
 **Entity** est une classe java mappée à une base de donnée. Les instances correspondes aux lignes et les attributs à chaque colonne.
 
 #### 4. Stack "C" : évolution
-   #### 4.1. Affichage des Programmeurs
-   4.1.1. Comment pouvons-nous appeler la méthode de ProgrammeurRepository qui nous
+#### 4.1. Affichage des Programmeurs
+#### 4.1.1. Comment pouvons-nous appeler la méthode de ProgrammeurRepository qui nous
    permettra de récupérer les infos sur les programmeurs ?`
-On appelle la méthode en utilisant l'instance du repository.
-   4.1.2. Pouvons-nous le faire directement dans la classe ProgrammeurControleur ?
-Parce que ça viole la séparation des responsabilités, le controleur ne doit pas contenir de logiques métier.
-
+On appelle la méthode prédéfinie findAll() en utilisant l’instance du ProgrammeurRepository injectée dans la couche Service. Cette méthode renvoie la liste complète des programmeurs présents dans la base de données.
+#### 4.1.2. Pouvons-nous le faire directement dans la classe ProgrammeurControleur ?
+Ce n’est pas recommandé, car cela viole le principe de séparation des responsabilités. Le contrôleur doit uniquement gérer les requêtes HTTP et les réponses, tandis que la logique métier (comme l’appel à la base via le repository) doit être gérée par la couche Service.
 #### 4.1.4. Quel est, selon vous, l'intérêt d'utiliser l'annotation @Service ?
-L'annotation @Service permet de définir les composants de la couche service d'une application. Elle identifie une classe comme un service de logique métier , permettant à Spring de la gérer comme un Spring Bean . Cette annotation permet de séparer la logique métier de la couche contrôleur, améliorant ainsi la maintenabilité et la modularité du code.
+L’annotation @Service indique à Spring que la classe contient la logique métier de l’application. Elle permet :
+	- à Spring de détecter et d’instancier automatiquement la classe comme un bean,
+	- de séparer la logique métier du contrôleur pour améliorer la lisibilité, la modularité et la maintenabilité du code,
+	- de faciliter l’injection de dépendances dans d’autres composants comme les contrôleurs.
 
 4.1.7. Où en sommes-nous par rapport au diagramme d'architecture multi stack ?
-On est a 3 couches sur 4 : il manque que la vue avec thymleaf
+À ce stade, On est a 3 couches sur 4 de l’architecture multi-stack :
+- Persistance : grâce à JPA/Hibernate et MariaDB, nous accédons et manipulons les données stockées en base.
+- Service : via la classe ProgrammeurService, nous gérons la logique métier et faisons le lien entre la persistance et l’API.
+- API / Contrôleur : avec ProgrammeurControleur, nous exposons des endpoints REST (GET, POST, PUT, PATCH, DELETE) accessibles via HTTP.
+
+La seule couche manquante pour compléter complètement le schéma est la Vue (avec Thymeleaf ou autre moteur de rendu), qui permettra de présenter les données à l’utilisateur final côté client.
+
 #### 4.4. Modification d'un programmeur (PUT ou PATCH)
 Créez une méthode qui permet de modifier un programmeur à partir de son id. Quelle est la
 différence entre PUT et PATCH ?
 
 La différence est que Put écrase toutes les données au moment de la modification alors que Patch modifie uniquement les infos données dans la requete.
+- PUT : remplace toutes les données de la ressource. Même les champs non mentionnés dans la requête sont réécrasés (souvent mis à null s’ils ne sont pas fournis).
+- PATCH : modifie uniquement les champs présents dans la requête. Les autres attributs restent inchangés.
